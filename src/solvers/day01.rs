@@ -7,16 +7,14 @@ pub static SOLVER: Solver = Solver {
 };
 
 pub fn part1(input: &String) -> String {
-    let line_nums: Vec<String> = input
+    input
         .lines()
-        .map(|l| l.chars().filter(|c| c.is_digit(10)).collect())
-        .collect();
-
-    line_nums
-        .iter()
-        .map(|ln| ln.chars().nth(0).unwrap())
-        .zip(line_nums.iter().map(|ln| ln.chars().last().unwrap()))
-        .map(|(x, y)| format!("{x}{y}").parse::<u32>().unwrap())
+        .map(|ln| {
+            let nums: String = ln.chars().filter(|c| c.is_digit(10)).collect();
+            let first = nums.chars().next().unwrap();
+            let last = nums.chars().last().unwrap();
+            format!("{first}{last}").parse::<u32>().unwrap()
+        })
         .sum::<u32>()
         .to_string()
 }
