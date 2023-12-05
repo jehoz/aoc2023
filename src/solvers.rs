@@ -6,10 +6,9 @@ use std::path::Path;
 
 mod day01;
 
-pub struct Solver {
-    input_path: &'static str,
-    part1: fn(&String) -> String,
-    part2: fn(&String) -> String,
+struct Solution {
+    part1: String,
+    part2: String,
 }
 
 fn get_input(day: u32) -> Option<String> {
@@ -57,21 +56,18 @@ fn get_input(day: u32) -> Option<String> {
 }
 
 pub fn run_solver(day: u32) {
-    let solver = match day {
-        1 => &day01::SOLVER,
+    let solve = match day {
+        1 => day01::solve,
         other => {
             println!("No solver implemented for day {other}.");
             return;
         }
     };
 
-    if let Some(input) = get_input(day) {
-        println!("DAY {day}");
+    let Some(input) = get_input(day) else { return };
+    println!("DAY {day}");
 
-        let p1_sln = (solver.part1)(&input);
-        println!("Part 1: {p1_sln}");
-
-        let p2_sln = (solver.part2)(&input);
-        println!("Part 2: {p2_sln}");
-    }
+    let solution = solve(&input);
+    println!("Part 1: {}", solution.part1);
+    println!("Part 2: {}", solution.part2);
 }

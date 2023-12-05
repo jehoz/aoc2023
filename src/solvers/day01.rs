@@ -1,40 +1,47 @@
-use crate::solvers::Solver;
+use crate::solvers::Solution;
 
-pub static SOLVER: Solver = Solver {
-    input_path: "inputs/01.txt",
-    part1,
-    part2,
-};
+pub fn solve(input: &String) -> Solution {
+    Solution {
+        part1: input
+            .lines()
+            .map(first_and_last_digits)
+            .sum::<u32>()
+            .to_string(),
 
-pub fn part1(input: &String) -> String {
-    input
-        .lines()
-        .map(|ln| {
-            let nums: String = ln.chars().filter(|c| c.is_digit(10)).collect();
-            let first = nums.chars().next().unwrap();
-            let last = nums.chars().last().unwrap();
-            format!("{first}{last}").parse::<u32>().unwrap()
-        })
-        .sum::<u32>()
-        .to_string()
+        part2: input
+            .lines()
+            .map(|line| {
+                let modified_line = words_to_digits(&line);
+                first_and_last_digits(modified_line.as_str())
+            })
+            .sum::<u32>()
+            .to_string(),
+    }
 }
 
-pub fn part2(input: &String) -> String {
+fn first_and_last_digits(line: &str) -> u32 {
+    let nums: String = line.chars().filter(|c| c.is_digit(10)).collect();
+    let first = nums.chars().next().unwrap();
+    let last = nums.chars().last().unwrap();
+    format!("{first}{last}").parse::<u32>().unwrap()
+}
+
+fn words_to_digits(line: &str) -> String {
     let words = [
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
     ];
 
-    let mut modified_input = String::new();
+    let mut output = String::new();
 
-    for (i, char) in input.chars().enumerate() {
-        for (word_i, word) in words.iter().enumerate() {
-            if input.get(i..).unwrap().starts_with(word) {
-                let digit = format!("{}", word_i + 1);
-                modified_input.push_str(digit.as_str());
+    for (i, char) in line.chars().enumerate() {
+        for (n, word) in words.iter().enumerate() {
+            if line.get(i..).unwrap().starts_with(word) {
+                let digit = format!("{}", n + 1);
+                output.push_str(digit.as_str());
             }
         }
-        modified_input.push(char);
+        output.push(char);
     }
 
-    part1(&modified_input)
+    output
 }
