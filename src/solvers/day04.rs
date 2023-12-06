@@ -18,10 +18,17 @@ pub fn solve(input: &str) -> Solution {
         .sum::<u32>()
         .to_string();
 
-    Solution {
-        part1,
-        part2: "Not implemented".to_string(),
-    }
+    let part2 = {
+        let mut cards_won = vec![1; num_matching.len()];
+        for (i, matching) in num_matching.iter().enumerate().rev() {
+            for j in 0..matching.clone() as usize {
+                cards_won[i] += cards_won[1 + i + j];
+            }
+        }
+        cards_won.iter().sum::<u32>().to_string()
+    };
+
+    Solution { part1, part2 }
 }
 
 struct Card {
