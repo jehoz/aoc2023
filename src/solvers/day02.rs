@@ -1,3 +1,5 @@
+use std::cmp;
+
 use nom::{
     branch::alt,
     bytes::complete::tag,
@@ -11,9 +13,13 @@ use nom::{
 use crate::solvers::Solution;
 
 pub fn solve(input: &String) -> Solution {
-    let games = input.lines().map(|line| parse_game(line).unwrap().1);
+    let games: Vec<Game> = input
+        .lines()
+        .map(|line| parse_game(line).unwrap().1)
+        .collect();
 
     let p1_ans = games
+        .iter()
         .filter(|g| {
             g.observations
                 .iter()
@@ -23,9 +29,23 @@ pub fn solve(input: &String) -> Solution {
         .sum::<u32>()
         .to_string();
 
+    let p2_ans = games
+        .iter()
+        .map(|g| {
+            let mut maxes = (0, 0, 0);
+            for obs in &g.observations {
+                maxes.0 = cmp::max(maxes.0, obs.red);
+                maxes.1 = cmp::max(maxes.1, obs.green);
+                maxes.2 = cmp::max(maxes.2, obs.blue);
+            }
+            maxes.0 * maxes.1 * maxes.2
+        })
+        .sum::<u32>()
+        .to_string();
+
     Solution {
         part1: p1_ans,
-        part2: "Not implemented".to_string(),
+        part2: p2_ans,
     }
 }
 
