@@ -7,6 +7,7 @@ use std::path::Path;
 mod day01;
 mod day02;
 mod day03;
+mod day04;
 
 struct Solution {
     part1: String,
@@ -62,6 +63,7 @@ pub fn run_solver(day: u32) {
         1 => day01::solve,
         2 => day02::solve,
         3 => day03::solve,
+        4 => day04::solve,
         other => {
             println!("No solver implemented for day {other}.");
             return;
