@@ -18,7 +18,7 @@ pub fn solve(input: &str) -> Solution {
         .map(|line| parse_game(line).unwrap().1)
         .collect();
 
-    let p1_ans = games
+    let part1 = games
         .iter()
         .filter(|g| {
             g.observations
@@ -29,7 +29,7 @@ pub fn solve(input: &str) -> Solution {
         .sum::<u32>()
         .to_string();
 
-    let p2_ans = games
+    let part2 = games
         .iter()
         .map(|g| {
             let mut maxes = (0, 0, 0);
@@ -43,10 +43,7 @@ pub fn solve(input: &str) -> Solution {
         .sum::<u32>()
         .to_string();
 
-    Solution {
-        part1: p1_ans,
-        part2: p2_ans,
-    }
+    Solution { part1, part2 }
 }
 
 struct Observation {

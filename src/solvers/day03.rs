@@ -7,7 +7,7 @@ use crate::solvers::Solution;
 pub fn solve(input: &str) -> Solution {
     let parts = parse_parts(input);
 
-    let p1_ans = {
+    let part1 = {
         let mut nums: Vec<PartNumber> = parts
             .iter()
             .flat_map(|p| p.numbers.iter())
@@ -18,17 +18,14 @@ pub fn solve(input: &str) -> Solution {
         nums.iter().map(|n| n.value).sum::<u32>().to_string()
     };
 
-    let p2_ans = parts
+    let part2 = parts
         .iter()
         .filter(|p| p.symbol == '*' && p.numbers.len() == 2)
         .map(|p| p.numbers[0].value * p.numbers[1].value)
         .sum::<u32>()
         .to_string();
 
-    Solution {
-        part1: p1_ans,
-        part2: p2_ans,
-    }
+    Solution { part1, part2 }
 }
 
 #[derive(Clone, PartialEq, Eq, Ord, PartialOrd)]

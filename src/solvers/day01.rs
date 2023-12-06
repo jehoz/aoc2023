@@ -1,22 +1,22 @@
 use crate::solvers::Solution;
 
 pub fn solve(input: &str) -> Solution {
-    Solution {
-        part1: input
-            .lines()
-            .map(first_and_last_digits)
-            .sum::<u32>()
-            .to_string(),
+    let part1 = input
+        .lines()
+        .map(first_and_last_digits)
+        .sum::<u32>()
+        .to_string();
 
-        part2: input
-            .lines()
-            .map(|line| {
-                let modified_line = words_to_digits(&line);
-                first_and_last_digits(modified_line.as_str())
-            })
-            .sum::<u32>()
-            .to_string(),
-    }
+    let part2 = input
+        .lines()
+        .map(|line| {
+            let modified_line = words_to_digits(&line);
+            first_and_last_digits(modified_line.as_str())
+        })
+        .sum::<u32>()
+        .to_string();
+
+    Solution { part1, part2 }
 }
 
 fn first_and_last_digits(line: &str) -> u32 {
