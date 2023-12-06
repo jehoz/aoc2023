@@ -18,9 +18,16 @@ pub fn solve(input: &String) -> Solution {
         nums.iter().map(|n| n.value).sum::<u32>().to_string()
     };
 
+    let p2_ans = parts
+        .iter()
+        .filter(|p| p.symbol == '*' && p.numbers.len() == 2)
+        .map(|p| p.numbers[0].value * p.numbers[1].value)
+        .sum::<u32>()
+        .to_string();
+
     Solution {
-        part2: "Not implemented".to_string(),
         part1: p1_ans,
+        part2: p2_ans,
     }
 }
 
@@ -80,7 +87,9 @@ fn parse_parts(input: &str) -> Vec<Part> {
                 }
 
                 if let Some(n) = num_locs.get(&(x + i, y + j)) {
-                    part.numbers.push(n.clone());
+                    if let None = part.numbers.iter().find(|x| x.uid == n.uid) {
+                        part.numbers.push(n.clone());
+                    }
                 }
             }
         }
