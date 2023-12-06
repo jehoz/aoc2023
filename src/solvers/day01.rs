@@ -1,6 +1,6 @@
 use crate::solvers::Solution;
 
-pub fn solve(input: &String) -> Solution {
+pub fn solve(input: &str) -> Solution {
     Solution {
         part1: input
             .lines()

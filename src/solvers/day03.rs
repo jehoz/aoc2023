@@ -4,7 +4,7 @@ use nom::{character::complete::digit1, error::Error};
 
 use crate::solvers::Solution;
 
-pub fn solve(input: &String) -> Solution {
+pub fn solve(input: &str) -> Solution {
     let parts = parse_parts(input);
 
     let p1_ans = {

@@ -12,7 +12,7 @@ use nom::{
 
 use crate::solvers::Solution;
 
-pub fn solve(input: &String) -> Solution {
+pub fn solve(input: &str) -> Solution {
     let games: Vec<Game> = input
         .lines()
         .map(|line| parse_game(line).unwrap().1)
