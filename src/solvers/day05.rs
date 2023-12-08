@@ -14,35 +14,41 @@ pub fn solve(input: &str) -> Solution {
     let (_, mappings) =
         separated_list1(tuple((newline, newline)), parse_mapping)(input.trim()).unwrap();
 
+    let seed_to_loc = chain_mappings(mappings);
+
     let part1 = seeds
         .iter()
-        .map(|seed| {
-            let mut n = seed.clone();
-            for mapping in &mappings {
-                n = mapping.convert(n);
-            }
-            n
-        })
+        .map(&seed_to_loc)
         .reduce(u32::min)
         .unwrap()
         .to_string();
-    let part2 = String::from("Not implemented.");
 
-    Solution { part1, part2 }
+    let mut part2 = u32::MAX;
+    for range in expand_seed_ranges(seeds) {
+        for seed in range {
+            let loc = &seed_to_loc(&seed);
+            part2 = part2.min(*loc);
+        }
+    }
+
+    Solution {
+        part1,
+        part2: part2.to_string(),
+    }
 }
 
-struct Range {
+struct RangeMap {
     source_start: u32,
     destination_start: u32,
     length: u32,
 }
 
 struct Mapping {
-    ranges: Vec<Range>,
+    ranges: Vec<RangeMap>,
 }
 
 impl Mapping {
-    fn convert(&self, src: u32) -> u32 {
+    fn apply(&self, src: u32) -> u32 {
         for range in &self.ranges {
             if src >= range.source_start && src <= range.source_start + range.length {
                 return (src - range.source_start) + range.destination_start;
@@ -59,11 +65,11 @@ fn parse_seeds(input: &str) -> IResult<&str, Vec<u32>> {
     )(input)
 }
 
-fn parse_range(input: &str) -> IResult<&str, Range> {
+fn parse_range(input: &str) -> IResult<&str, RangeMap> {
     map_opt(
         separated_list1(space1, map_res(digit1, |s: &str| s.parse::<u32>())),
         |ns| {
-            Some(Range {
+            Some(RangeMap {
                 destination_start: ns.get(0).cloned()?,
                 source_start: ns.get(1).cloned()?,
                 length: ns.get(2).cloned()?,
@@ -77,4 +83,26 @@ fn parse_mapping(input: &str) -> IResult<&str, Mapping> {
     map_opt(separated_list1(newline, parse_range), |ranges| {
         Some(Mapping { ranges })
     })(input)
+}
+
+fn chain_mappings(mappings: Vec<Mapping>) -> impl Fn(&u32) -> u32 {
+    move |x: &u32| {
+        let mut y = x.clone();
+        for mapping in &mappings {
+            y = mapping.apply(y);
+        }
+        y
+    }
+}
+
+fn expand_seed_ranges(seed_nums: Vec<u32>) -> Vec<std::ops::Range<u32>> {
+    let mut ranges = Vec::new();
+
+    for i in (0..seed_nums.len()).step_by(2) {
+        let start = seed_nums[i];
+        let length = seed_nums[i + 1];
+        ranges.push(start..(start + length));
+    }
+
+    ranges
 }
